@@ -64,15 +64,15 @@ describe BlackList do
     end
     
     it "should return a single set of <strong> tags when only one word is flagged" do
-      BlackList.highlight(@greedy_phrase).should =~ /(<strong>.*?<\/strong>){1}/
+      BlackList.highlight(@greedy_phrase).should =~ /((.*?)(<strong>.*?<\/strong>)){1}/
     end
     
     it "should return a set of <strong> tags for each blacklisted word" do
-      BlackList.highlight(@multiple_phrase).should =~ /(<strong>.*?<\/strong>){3}/
+      BlackList.highlight(@multiple_phrase).should =~ /((.*?)(<strong>.*?<\/strong>)){3}/
     end
     
     it "should not return <strong> tags in a clean phrase" do
-      BlackList.highlight(@clean_phrase).should !~ /<strong>.*?<\/strong>/
+      BlackList.highlight(@clean_phrase).should_not =~ /((.*?)(<strong>.*?<\/strong>)){1}/
     end
   end
 end

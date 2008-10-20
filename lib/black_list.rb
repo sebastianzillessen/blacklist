@@ -33,7 +33,7 @@ class BlackList
     end unless EXACT.nil?
     
     GREEDY.each do |word|
-      highlighted_text = highlighted_text.gsub(/(#{word})*/i, '*\1*')
+      highlighted_text = highlighted_text.gsub(/(#{word})+/i, '*\1*')
     end unless GREEDY.nil?
     
     RedCloth.new(highlighted_text).to_html
@@ -45,6 +45,6 @@ class BlackList
     end
     
     def self.greedy_match?(text, word)
-      text =~ /.*?#{word}.*/i
+      text =~ /(#{word})+/i
     end
 end
