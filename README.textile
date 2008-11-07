@@ -1,0 +1,24 @@
+h1. BlackList: dead simple content filtering
+
+This library is just a simple implementation of a blacklist to filter content. You can add
+or remove words from the list in config/black_list.yml. It supports two types of filters
+currently. Exact matches and greedy matches. Exact matches will only match if the word is
+found on its own. Greedy matches will find words nested within other words.
+
+Usage is as follows:
+
+  BlackList.block?("Stupid ass simple.")    => true
+  BlackList.block?("Squeaky clean.")        => false
+  BlackList.block?("Assassins!")            => false
+
+You can also just search for particular sorts of matches:
+
+  BlackList.greedy?("Stupid ass simple.")   => false
+  BlackList.exact?("Stupid ass simple.")    => true
+
+It also supports highlighting flagged words:
+
+  BlackList.highlight("Stupid ass simple.") => "<p>Stupid <strong>ass</strong> simple.</p>"
+  BlackList.highlight("Squeaky clean.")     => "<p>Squeaky clean.</p>"
+
+A set of default words for filtering are included from http://www.noswearing.com.
