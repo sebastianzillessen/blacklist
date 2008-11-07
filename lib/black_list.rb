@@ -1,24 +1,44 @@
 require 'yaml'
 require 'RedCloth'
+require File.join(File.dirname(__FILE__), "../lib/attribute_accessors")
+require File.join(File.dirname(__FILE__), "../lib/array_extensions")
 
 class BlackList
-  EXACT, GREEDY = YAML::load(File.open("./config/black_list.yml"))
+  cattr_accessor :exact, :greedy, :initialized
+  
+  def self.initialize!
+    load_words!
+    trim_greedy_words!
+    @@initialized = true
+  end
+  
+  def self.deinitialize!
+    @@exact, @@greedy = nil, nil
+    @@initialized = false
+  end
+  
+  def self.load_words!
+    @@exact, @@greedy = YAML::load(IO.read(File.join(File.dirname(__FILE__), "../config/black_list.yml")))
+  end
   
   def self.block?(text)
+    initialize unless @@initialized
     greedy?(text) or exact?(text)
   end
   
   def self.exact?(text)
-    return false if EXACT.nil?
-    EXACT.each do |word|
+    initialize unless @@initialized
+    return false if @@exact.nil?
+    @@exact.each do |word|
       return true if exact_match?(text, word)
     end
     false
   end
   
   def self.greedy?(text)
-    return false if GREEDY.nil?
-    GREEDY.each do |word|
+    initialize unless @@initialized
+    return false if @@greedy.nil?
+    @@greedy.each do |word|
       return true if greedy_match?(text, word)
     end
     false
@@ -26,20 +46,30 @@ class BlackList
   
   def self.highlight(text)
     return text if text !~ /\S/
+    initialize unless @@initialized
     
     highlighted_text = text
-    EXACT.each do |word|
+    @@exact.each do |word|
       highlighted_text = highlighted_text.gsub(/\b(#{word})\b/i, '*\1*')
-    end unless EXACT.nil?
+    end unless @@exact.nil?
     
-    GREEDY.each do |word|
+    @@greedy.each do |word|
       highlighted_text = highlighted_text.gsub(/(#{word})+/i, '*\1*')
-    end unless GREEDY.nil?
+    end unless @@greedy.nil?
     
     RedCloth.new(highlighted_text).to_html
   end
   
-  protected    
+  # Removes words that are supersets of other @@greedy words.
+  # For example, "assassin" would be removed if it was a
+  # @@greedy word and another @@greedy word, "ass" existed.
+  def self.trim_greedy_words!
+    @@greedy.each do |word|
+      @@greedy.delete_if{ |other_word| other_word.match(word) && word != other_word }
+    end
+  end
+  
+  protected
     def self.exact_match?(text, word)
       text =~ /\b#{word}\b/i
     end
