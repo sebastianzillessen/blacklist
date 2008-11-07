@@ -18,7 +18,7 @@ You can also just search for particular sorts of matches:
 
 It also supports highlighting flagged words:
 
-  BlackList.highlight("Stupid ass simple.") => "<p>Stupid <strong>ass</strong> simple.</p>"
-  BlackList.highlight("Squeaky clean.")     => "<p>Squeaky clean.</p>"
+  BlackList.highlight("Stupid ass simple.") => "<code><p>Stupid <strong>ass</strong> simple.</p></code>"
+  BlackList.highlight("Squeaky clean.")     => "<code><p>Squeaky clean.</p></code>"
 
-A set of default words for filtering are included from http://www.noswearing.com.
+A set of default words for filtering are included from http://www.noswearing.com in config/black_list.yml.
