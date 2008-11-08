@@ -7,6 +7,10 @@ class BlackList
   include Singleton
   attr_accessor :exact, :greedy
   
+  # Redirects all method calls made directly on BlackList to
+  # BlackList.instance. For example:
+  #
+  # BlackList.greedy?("foo") => BlackList.instance.greedy?("foo")
   def self.method_missing(method, *args)
     self.instance.send(method, *args) unless method == :instance
   end
