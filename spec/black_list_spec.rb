@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'RedCloth'
 require File.join(File.dirname(__FILE__), '../lib/black_list')
 
 describe BlackList do
