@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__), '../lib/black_list')
 
 describe BlackList do
   before(:all) do
-    BlackList.initialize!
     @clean_phrase           = "This is a clean phrase."
     @greedy_phrase          = "Oh, fuck!"
     @exact_phrase           = "Let's kick some ass!"
@@ -15,9 +14,10 @@ describe BlackList do
     @multiple_phrase        = "Oh, fuck! I have had it with these motherfucking snakes on this motherfucking plane!"
   end
   
-  describe ".initialize!" do
+  describe ".initialize" do
     before(:each) do
-      BlackList.deinitialize!
+      BlackList.greedy = nil
+      BlackList.exact = nil
     end
     
     it "should load exact blacklist words" do
@@ -27,33 +27,12 @@ describe BlackList do
     it "should load greedy blacklist words" do
       lambda { BlackList.load_words! }.should change(BlackList, :greedy)
     end
-    
-    it "should set @@initialized to true" do
-      lambda { BlackList.initialize! }.should change(BlackList, :initialized).to(true)
-    end
-  end
-  
-  describe ".deinitialize!" do
-    before(:each) do
-      BlackList.initialize!
-    end
-    
-    it "should set @@exact to nil" do
-      lambda { BlackList.deinitialize! }.should change(BlackList, :exact).to(nil)
-    end
-    
-    it "should set @@greedy to nil" do
-      lambda { BlackList.deinitialize! }.should change(BlackList, :greedy).to(nil)
-    end
-    
-    it "should set @@initialized to false" do
-      lambda { BlackList.deinitialize! }.should change(BlackList, :initialized).to(false)
-    end
   end
   
   describe ".load_words!" do
     before(:each) do
-      BlackList.deinitialize!
+      BlackList.greedy = nil
+      BlackList.exact = nil
     end
     
     it "should load exact blacklist words" do
