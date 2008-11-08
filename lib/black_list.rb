@@ -16,10 +16,6 @@ class BlackList
     trim_greedy_words!
   end
   
-  def load_words!
-    @exact, @greedy = YAML::load(IO.read(File.join(File.dirname(__FILE__), "../config/black_list.yml")))
-  end
-  
   def block?(text)
     greedy?(text) or exact?(text)
   end
@@ -41,27 +37,27 @@ class BlackList
     RedCloth.new(text).to_html
   end
   
-  # Removes words that are supersets of other @greedy words.
-  # For example, "assassin" would be removed if it was a
-  # @greedy word and another @greedy word, "ass" existed.
-  def trim_greedy_words!
-    @greedy.each do |word|
-      @greedy.delete_if{ |other_word| other_word.match(word) && word != other_word }
-    end
-  end
-  
-  def highlight_words!(text, kind, words)
-    words.each do |word|
-      if kind == :greedy
-        text.gsub!(/(#{word})+/i, '*\1*')
-      else
-        text.gsub!(/\b(#{word})\b/i, '*\1*')
-      end
-    end unless words.nil?
-    text
-  end
-  
   protected
+    # Removes words that are supersets of other @greedy words.
+    # For example, "assassin" would be removed if it was a
+    # @greedy word and another @greedy word, "ass" existed.
+    def trim_greedy_words!
+      @greedy.each do |word|
+        @greedy.delete_if{ |other_word| other_word.match(word) && word != other_word }
+      end
+    end
+
+    def highlight_words!(text, kind, words)
+      words.each do |word|
+        if kind == :greedy
+          text.gsub!(/(#{word})+/i, '*\1*')
+        else
+          text.gsub!(/\b(#{word})\b/i, '*\1*')
+        end
+      end unless words.nil?
+      text
+    end
+    
     def check(text, kind, words)
       return false if words.nil?
       words.each do |word|
@@ -76,5 +72,9 @@ class BlackList
     
     def greedy_match?(text, word)
       text =~ /(#{word})+/i
+    end
+    
+    def load_words!
+      @exact, @greedy = YAML::load(IO.read(File.join(File.dirname(__FILE__), "../config/black_list.yml")))
     end
 end

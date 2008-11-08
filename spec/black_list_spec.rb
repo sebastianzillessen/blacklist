@@ -21,11 +21,11 @@ describe BlackList do
     end
     
     it "should load exact blacklist words" do
-      lambda { BlackList.load_words! }.should change(BlackList, :exact)
+      lambda { BlackList.send(:load_words!) }.should change(BlackList, :exact)
     end
     
     it "should load greedy blacklist words" do
-      lambda { BlackList.load_words! }.should change(BlackList, :greedy)
+      lambda { BlackList.send(:load_words!) }.should change(BlackList, :greedy)
     end
   end
   
@@ -36,11 +36,11 @@ describe BlackList do
     end
     
     it "should load exact blacklist words" do
-      lambda { BlackList.load_words! }.should change(BlackList, :exact)
+      lambda { BlackList.send(:load_words!) }.should change(BlackList, :exact)
     end
     
     it "should load greedy blacklist words" do
-      lambda { BlackList.load_words! }.should change(BlackList, :greedy)
+      lambda { BlackList.send(:load_words!) }.should change(BlackList, :greedy)
     end
   end
   
@@ -196,7 +196,7 @@ describe BlackList do
   describe ".trim_greedy_words!" do
     it "should remove words that are supersets of other greedy words" do
       BlackList.greedy = ["foo", "foobar", "foobarbaz"]
-      BlackList.trim_greedy_words!
+      BlackList.send(:trim_greedy_words!)
       BlackList.greedy.first.should == "foo"
       BlackList.greedy.size.should == 1
     end
