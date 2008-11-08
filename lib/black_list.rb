@@ -75,6 +75,6 @@ class BlackList
     end
     
     def load_words!
-      @exact, @greedy = YAML::load(IO.read(File.join(File.dirname(__FILE__), "../config/black_list.yml")))
+      @exact, @greedy = YAML::load(File.read(File.join(File.dirname(__FILE__), "../config/black_list.yml")))
     end
 end
