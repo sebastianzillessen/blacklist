@@ -1,4 +1,5 @@
 require 'yaml'
+require 'rubygems'
 require 'RedCloth'
 require 'singleton'
 
@@ -49,20 +50,18 @@ class BlackList
     end
   end
   
+  def highlight_words!(text, kind, words)
+    words.each do |word|
+      if kind == :greedy
+        text.gsub!(/(#{word})+/i, '*\1*')
+      else
+        text.gsub!(/\b(#{word})\b/i, '*\1*')
+      end
+    end unless words.nil?
+    text
+  end
+  
   protected
-    def highlight_words!(text, kind, words)
-     words = (kind == :greedy ? @greedy : @exact)
-      
-      words.each do |word|
-        if kind == :greedy
-          text.gsub!(/(#{word})+/i, '*\1*')
-        else
-          text.gsub!(/\b(#{word})\b/i, '*\1*')
-        end
-      end unless words.nil?
-      text
-    end
-    
     def check(text, kind, words)
       return false if words.nil?
       words.each do |word|

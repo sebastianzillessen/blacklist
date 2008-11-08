@@ -113,6 +113,86 @@ describe BlackList do
     end
   end
   
+  describe ".highlight_words!" do
+    it "should not alter text if the supplied array is nil when kind is :exact" do
+      BlackList.highlight_words!("This should be highlighted.", :exact, nil).should_not =~ /((.*?)(\*.*?\*)){1}/
+    end
+    
+    it "should not alter text if the supplied array is nil when kind is :greedy" do
+      BlackList.highlight_words!("This should be highlighted.", :greedy, nil).should_not =~ /((.*?)(\*.*?\*)){1}/
+    end
+    
+    it "should not alter text if the supplied array is empty when kind is :exact" do
+      BlackList.highlight_words!("This should be highlighted.", :exact, []).should_not =~ /((.*?)(\*.*?\*)){1}/
+    end
+    
+    it "should not alter text if the supplied array is empty when kind is :greedy" do
+      BlackList.highlight_words!("This should be highlighted.", :greedy, []).should_not =~ /((.*?)(\*.*?\*)){1}/
+    end
+    
+    it "should use supplied array when kind is :exact" do
+      BlackList.highlight_words!("This should this be highlighted.", :exact, ["this"]).should =~ /((.*?)(\*.*?\*)){1}/
+    end
+    
+    it "should use supplied array when kind is :greedy" do
+      BlackList.highlight_words!("This should be highlighted.", :greedy, ["highlight"]).should =~ /((.*?)(\*.*?\*)){1}/
+    end
+  end
+  
+  describe ".check" do
+    it "should return false if supplied words equal nil when kind is :greedy" do
+      BlackList.send(:check, "This is a greedy test.", :greedy, nil).should be_false
+    end
+    
+    it "should return false if supplied words equal nil when kind is :exact" do
+      BlackList.send(:check, "This is a greedy test.", :exact, nil).should be_false
+    end
+    
+    it "should find greedy words when kind is :greedy" do
+      BlackList.send(:check, "This is a greedy test.", :greedy, ["greed"]).should be_true
+    end
+    
+    it "should find exact words when kind is :greedy" do
+      BlackList.send(:check, "This is a greedy test.", :greedy, ["greedy"]).should be_true
+    end
+    
+    it "should find exact words when kind is :exact" do
+      BlackList.send(:check, "This is a greedy test.", :exact, ["greedy"]).should be_true
+    end
+    
+    it "should not find greedy words when kind is :exact" do
+      BlackList.send(:check, "This is a greedy test.", :exact, ["greed"]).should be_false
+    end
+  end
+  
+  describe ".exact_match?" do
+    it "should not be nil for exact matches" do
+      BlackList.send(:exact_match?, "This is a greedy test.", "greedy").should_not be_nil
+    end
+    
+    it "should be nil for greedy matches" do
+      BlackList.send(:exact_match?, "This is a greedy test.", "greed").should be_nil
+    end
+    
+    it "should be nil for no matches" do
+      BlackList.send(:exact_match?, "This is a test.", "greedy").should be_nil
+    end
+  end
+  
+  describe ".greedy_match?" do
+    it "should not be nil for greedy matches" do
+      BlackList.send(:greedy_match?, "This is a greedy test.", "greed").should_not be_nil
+    end
+    
+    it "should not be nil for exact matches" do
+      BlackList.send(:greedy_match?, "This is a greedy test.", "greedy").should_not be_nil
+    end
+    
+    it "should be nil for no matches" do
+      BlackList.send(:greedy_match?, "This is a test.", "greedy").should be_nil
+    end
+  end
+  
   describe ".trim_greedy_words!" do
     it "should remove words that are supersets of other greedy words" do
       BlackList.greedy = ["foo", "foobar", "foobarbaz"]
