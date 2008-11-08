@@ -13,20 +13,13 @@ describe BlackList do
     @capcase_greedy_phrase  = "Oh, FuCk!"
     @multiple_phrase        = "Oh, fuck! I have had it with these motherfucking snakes on this motherfucking plane!"
   end
+    
+  it "should have an array of words in @greedy" do
+    BlackList.greedy.should be_kind_of(Array)
+  end
   
-  describe ".initialize" do
-    before(:each) do
-      BlackList.greedy = nil
-      BlackList.exact = nil
-    end
-    
-    it "should load exact blacklist words" do
-      lambda { BlackList.send(:load_words!) }.should change(BlackList, :exact)
-    end
-    
-    it "should load greedy blacklist words" do
-      lambda { BlackList.send(:load_words!) }.should change(BlackList, :greedy)
-    end
+  it "should have an array of words in @exact" do
+    BlackList.exact.should be_kind_of(Array)
   end
   
   describe ".load_words!" do
