@@ -22,6 +22,14 @@ describe BlackList do
     BlackList.exact.should be_kind_of(Array)
   end
   
+  it "should set @greedy with supplied values" do
+    lambda { BlackList.greedy = ["foo"] }.should change(BlackList, :greedy).from(nil).to(["foo"])
+  end
+  
+  it "should set @exact with supplied values" do
+    lambda { BlackList.exact = ["foo"] }.should change(BlackList, :exact).from(nil).to(["foo"])
+  end
+  
   describe ".load_words!" do
     before(:each) do
       BlackList.greedy = nil
