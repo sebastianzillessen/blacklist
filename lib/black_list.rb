@@ -70,7 +70,8 @@ class BlackList
   end
   
   # Get the supplied text in HTML format with any blacklisted
-  # words bolded.
+  # words bolded. Text is passed through a Textile markup
+  # processor (RedCloth).
   def highlight(text)
     return text if text !~ /\S/
     
@@ -105,7 +106,7 @@ class BlackList
     
     # Check the supplied text for any of the supplied words 
     # using the designated match kind.
-    def check(text, kind, words)
+    def check(text, kind, words) #:doc:
       return false if words.nil?
       words.each do |word|
         return true if (kind == :greedy ? greedy_match?(text, word) : exact_match?(text, word))
@@ -114,12 +115,12 @@ class BlackList
     end
     
     # Check for exact matches of word in the supplied text.
-    def exact_match?(text, word)
+    def exact_match?(text, word) #:doc:
       text =~ /\b#{word}\b/i
     end
     
     # Check for greedy matches of word in the supplied text.
-    def greedy_match?(text, word)
+    def greedy_match?(text, word) #:doc:
       text =~ /(#{word})+/i
     end
     
