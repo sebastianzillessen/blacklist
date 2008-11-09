@@ -7,7 +7,8 @@
 # were obtained from http://www.noswearing.com. You can add or remove from the list 
 # as necessary. It supports two types of filters currently--exact matches and greedy 
 # matches.Exact matches will only match if the word is found on its own. Greedy 
-# matches will find words nested within other words.
+# matches will find words nested within other words.  It will also work out of the 
+# box as a Ruby on Rails plugin. Just drop it in vendor/plugins and it'll work.
 #
 # Usage is as follows:
 # 
