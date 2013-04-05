@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.description = "BlackList is a Ruby library offering simple content filtering via blacklisted words."
   s.has_rdoc = true
   s.authors  = ["Joel Watson"]
-  s.files    = ["README.textile", 
+  s.files    = ["README.md", 
     "lib/black_list.rb", 
     "config/black_list.yml"]
   s.test_files = ["spec/black_list_spec.rb"]
