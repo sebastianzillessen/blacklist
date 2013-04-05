@@ -97,7 +97,7 @@ class BlackList
     def highlight_words!(text, kind, words)
       words.each do |word|
         if kind == :greedy
-          text.gsub!(/(#{word})+/i, '[*\1*]')
+          text.gsub!(/(#{word})+/i, '[*\1*')
         else
           text.gsub!(/\b(#{word})\b/i, '*\1*')
         end
